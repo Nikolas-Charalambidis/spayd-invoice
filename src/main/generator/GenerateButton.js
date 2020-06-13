@@ -81,7 +81,7 @@ class GenerateButton extends React.Component {
 		doc.setFontType('normal');
 		doc.setFontSize(10);
 		doc.text(LEFT + TAB, UP + paymentBase + 1 * rowSize, "Číslo účtu");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 1 * rowSize, data.paymentTerms.accountNumber + "/" + data.paymentTerms.bankNumber);
+		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 1 * rowSize, data.paymentTerms.accountNumber + "/" + data.paymentTerms.bankCode);
 		doc.text(LEFT + TAB, UP + paymentBase + 2 * rowSize, "Banka");
 		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 2 * rowSize, data.paymentTerms.bankName);
 		doc.text(LEFT + TAB, UP + paymentBase + 3 * rowSize, "Variabilní symbol");
