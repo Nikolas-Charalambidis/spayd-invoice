@@ -1,0 +1,50 @@
+{
+	"id": "00",
+	"sender": {
+		"label": "Mgr. Jack Daniels",
+		"addressLine1": "Whiskey Street 123a/50",
+		"addressLine2": "100 00 Whiskey-ville",
+		"addressLine3": "",
+		"identifierPrefix": "IČ",
+		"identifier": "98765432",
+		"vatIdentifierPrefix": "DIČ",
+		"varIdentifier": "CZ12345678",
+		"noteLine1": "Podnikatel je zapsán do živnostenského rejstříku.",
+		"noteLine2": "Dodavatel je plátcem DPH."
+	},
+	"billTo": {
+		"label": "Whiskey s.r.o.",
+		"addressLine1": "Whiskey Street 1a/10",
+		"addressLine2": "100 00 Whiskey-ville",
+		"addressLine3": "",
+		"identifierPrefix": "IČ",
+		"identifier": "12345678",
+		"vatIdentifierPrefix": "DIČ",
+		"varIdentifier": "CZ12345678",
+		"noteLine1": "",
+		"noteLine2": ""
+	},
+	"paymentTerms": {
+		"accountNumber": "2074779028",
+		"bankCode": "3030",
+		"bankName": "Air Bank",
+		"variableSymbol": "1000",
+		"specificSymbol": "",
+		"constantSymbol": "",
+		"paymentType": "Převodem",
+		"paymentPeriodInDays": "15",
+		"currency": "CZK"
+	},
+	"items": [
+		{
+			"label": "IT služby",
+			"amount": "18",
+			"price": "6500",
+			"vatPercentage": "21"
+		}
+	],
+	"noteLine": "Dodané služby a zboží zůstává až do úplného uhrazení majetkem dodavatele.",
+	"configuration": {
+		"dateInId": true
+	}
+}
