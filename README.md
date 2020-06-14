@@ -1,68 +1,48 @@
 [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/qr-spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice)
 
-## Available Scripts
+[![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Nikolas-Charalambidis/react-hooks/blob/master/LICENSE)
 
-In the project directory, you can run:
+# SPAYD Invoice
 
-### `yarn start`
+The application generates invoice in the Czech language based on the provided data in the JSON format. The invoice contains all the fields a decent invoice should have and a QR payment code which follows the [Short Payment Descriptor](https://en.wikipedia.org/wiki/Short_Payment_Descriptor) (also known as SPAYD or SPD. Not *that* [SPD](https://en.wikipedia.org/wiki/Freedom_and_Direct_Democracy) though - hands out! That's why I prefer *SPAYD* over *SPD*). 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## [https://nikolas-charalambidis.github.io/spayd-invoice/](https://nikolas-charalambidis.github.io/spayd-invoice/)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+This web application is based on React and automatically built and deployed via Travis CI to GitHub Pages. If you want to achieve the same, the process is fairly simple and I describe in [React Hooks](https://github.com/Nikolas-Charalambidis/react-hooks).
 
-### `yarn test`
+**Disclaimer**: The default sample JSON is filled with fictional data only , except those: `paymentAccount` and `bankCode` - they are not the mock data and refer to *my* real account open solely for purposes and applications like this.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Here are a few basic scenarios you might want to go through.
 
-### `yarn build`
+## How does it work?
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+First of all, the application is ready to generate an invoice since the default data are provided on the application start.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Download a sample JSON
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This default JSON can be downloaded for the purpose of additional editing - this tepmlate is a sample and belongs to you, saved at your desktop and steady to be used.
 
-### `yarn eject`
+### Upload your JSON
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+The JSON can be uploaded and the application hence works with new set of data.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Generate invoice
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Click the button to generate the invoice based on the currently loaded data (the default data if no JSON was loaded).
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## JSON
 
-## Learn More
+The application works rather with JSON than XML. For most human beings JSON format is easier to read and edit (yet I never stop loving XML, which I find very powerful). Unluckily, there is no schema to validate it against. It brings such freedom but also can lead to unpredictable results. The JSON this application works with also contains aside from common fields saying *what* will be generated also configuration fields to indicate *how* it will be displayed.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Common fields
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+TO BE DONE
 
-### Code Splitting
+### Configurable fields
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+As said, they indicate *how* some fields will be displayed in the invoice.
 
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+#### `configuration.dateInId
+ - Type: `boolean`
+ - Values: either `true` or `false` (omitted in that case)
+ - Meaning: If the flag is set, the date in the `yyyymmdd` format will be included as a part of the ID of the invoice (ex. `20200614-15`). Otherwise, only true ID will be displayed (ex. `15`).
