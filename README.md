@@ -28,7 +28,7 @@ The JSON can be uploaded and the application hence works with new set of data.
 
 ### Generate invoice
 
-Click the button to generate the invoice based on the currently loaded data (the default data if no JSON was loaded).
+Click the button to generate the invoice based on the currently loaded data (the default data if no JSON was loaded). The QR code is displayed real-time at the website so you can check whether the code works as intended.
 
 ## JSON
 
