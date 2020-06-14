@@ -13,9 +13,6 @@ This web application is based on React and automatically built and deployed via 
 
 **Disclaimer**: The default sample JSON is filled with fictional data only , except those: `paymentAccount` and `bankCode` - they are not the mock data and refer to *my* real account open solely for purposes and applications like this.
 
-
-**Disclaimer**: The default sample JSON is filled with fictional data only , except those: `paymentAccount` and `bankCode` - they are not the mock data and refer to *my* real account open solely for purposes and applications like this.
-
 Here are a few basic scenarios you might want to go through.
 
 ## How does it work?
