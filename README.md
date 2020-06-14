@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Nikolas-Charalambidis/qr-spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/qr-spayd-invoice)
+
 ## Available Scripts
 
 In the project directory, you can run:
