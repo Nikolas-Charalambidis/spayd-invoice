@@ -1,5 +1,5 @@
 import React from 'react';
-import jsPDF from "jspdf";
+import JSPDF from "jspdf";
 import consolas from "./Consolas";
 import dateFormat from "dateformat";
 
@@ -8,17 +8,17 @@ class GenerateButton extends React.Component {
 	render() {
 		return <div>
 			<button onClick={this.generate}>Generate invoice</button>
-		</div>
+		</div>;
 	}
 
-	generate = event => {
+	generate = (event) => {
 		event.preventDefault();
 
 		const data = this.props.data;
 		const qrCodeCanvas = document.querySelectorAll("[data-qr=qr-name]")[0];
 		const qrCodeDataUri = qrCodeCanvas.toDataURL("image/png");
 
-		var doc = new jsPDF('p', 'pt');
+		var doc = new JSPDF('p', 'pt');
 
 		const LEFT = 60;
 		const RIGHT = LEFT + 290;
@@ -36,9 +36,9 @@ class GenerateButton extends React.Component {
 		doc.addFileToVFS('consolas-normal.ttf', consolas.normal);
 
 		doc.addFileToVFS('consolas-bold.ttf', consolas.bold);
-		doc.addFont('consolas-normal.ttf', 'Consolas', 'normal');
+		doc.addFont('consolas-normal.ttf', "Consolas", "normal");
 
-		doc.addFont('consolas-bold.ttf', 'Consolas', 'bold');
+		doc.addFont('consolas-bold.ttf', "Consolas", "bold");
 
 		doc.setFont('Consolas');
 		doc.setFontSize(24);
@@ -50,7 +50,7 @@ class GenerateButton extends React.Component {
 
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + subjectsBase, 'Dodavatel:');
+		doc.text(LEFT, UP + subjectsBase, "Dodavatel:");
 		doc.setFontSize(10);
 		doc.text(LEFT + TAB, UP + subjectsBase + 1 * rowSize, data.sender.label);
 		doc.setFontType('normal');
@@ -64,7 +64,7 @@ class GenerateButton extends React.Component {
 
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(RIGHT, UP + subjectsBase, 'Odběratel:');
+		doc.text(RIGHT, UP + subjectsBase, "Odběratel:");
 		doc.setFontSize(10);
 		doc.text(RIGHT + TAB, UP + subjectsBase + 1 * rowSize, data.billTo.label);
 		doc.setFontType('normal');
@@ -78,7 +78,7 @@ class GenerateButton extends React.Component {
 		const rightColumn = 116;
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + paymentBase, 'Platební podmínky:');
+		doc.text(LEFT, UP + paymentBase, "Platební podmínky:");
 		doc.setFontType('normal');
 		doc.setFontSize(10);
 		doc.text(LEFT + TAB, UP + paymentBase + 1 * rowSize, "Číslo účtu");
@@ -96,13 +96,13 @@ class GenerateButton extends React.Component {
 
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(RIGHT, UP + paymentBase, 'QR platba:');
+		doc.text(RIGHT, UP + paymentBase, "QR platba:");
 		doc.addImage(qrCodeDataUri, "PNG", RIGHT, UP + paymentBase + 8, 175, 175);
 
 		const invoiceBase = UP + paymentBase + 10 * rowSize;
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + invoiceBase, 'Fakturace za dodané služby:');
+		doc.text(LEFT, UP + invoiceBase, "Fakturace za dodané služby:");
 		doc.setFontSize(10);
 
 		const columnPosition = [0, 116, 165, 245, 290, 384];
@@ -161,7 +161,7 @@ class GenerateButton extends React.Component {
 		const summaryBase = UP + invoiceBase + rowSize * (items.length + 3);
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + summaryBase, 'Celkem k úhradě:');
+		doc.text(LEFT, UP + summaryBase, "Celkem k úhradě:");
 		doc.text(LEFT + TAB + columnPosition[5] + 66, UP + summaryBase, formattedPriceTotalWithVatSum, {align: "right"});
 
 		doc.setFontType('normal');

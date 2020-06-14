@@ -48,8 +48,7 @@ class QR extends React.Component {
 				"*MSG:" + message +
 				"*RN:" + recipientName +
 				"*";
-			//const qr = this.qr(this.props.data, json.iban);
-			this.setState({qr: qr});
+			this.setState({qr});
 		};
 		getData();
 	}

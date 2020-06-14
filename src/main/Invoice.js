@@ -10,7 +10,7 @@ class Invoice extends React.Component {
 		super(props);
 		this.state = {
 			data: this.recalculateData(jsonData)
-		}
+		};
 	}
 
 	render() {
@@ -23,7 +23,7 @@ class Invoice extends React.Component {
 		</div>;
 	}
 
-	handleFiles = files => {
+	handleFiles = (files) => {
 		const scope = this;
 		const reader = new FileReader();
 		reader.onload = function(e) {
@@ -34,7 +34,7 @@ class Invoice extends React.Component {
 		reader.readAsText(files[0]);
 	};
 
-	recalculateData = data => {
+	recalculateData = (data) => {
 		const items = data.items;
 		data.summary = {};
 		data.summary.priceTotalSum = 0;
