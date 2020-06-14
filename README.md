@@ -5,11 +5,14 @@
 
 # SPAYD Invoice
 
-The application generates invoice in the Czech language based on the provided data in the JSON format. The invoice contains all the fields a decent invoice should have and a QR payment code which follows the [Short Payment Descriptor](https://en.wikipedia.org/wiki/Short_Payment_Descriptor) (also known as SPAYD or SPD. Not *that* [SPD](https://en.wikipedia.org/wiki/Freedom_and_Direct_Democracy) though - God forbid!). 
+The application generates invoice in the Czech language based on the provided data in the JSON format. The invoice contains all the fields a decent invoice should have and a QR payment code which follows the [Short Payment Descriptor](https://en.wikipedia.org/wiki/Short_Payment_Descriptor) (also known as SPAYD or SPD. Not *that* [SPD](https://en.wikipedia.org/wiki/Freedom_and_Direct_Democracy) though - God forbid!). The application itself is really easy and provide only three features necessary for a complete experience - downloading/uploading data and the generation itself. The design, user-experience and a form for direct JSON editation is a subject of the future development. 
 
 ## [https://nikolas-charalambidis.github.io/spayd-invoice/](https://nikolas-charalambidis.github.io/spayd-invoice/)
 
 This web application is based on React and automatically built and deployed via Travis CI to GitHub Pages. If you want to achieve the same, the process is fairly simple and I describe in [React Hooks](https://github.com/Nikolas-Charalambidis/react-hooks).
+
+**Disclaimer**: The default sample JSON is filled with fictional data only , except those: `paymentAccount` and `bankCode` - they are not the mock data and refer to *my* real account open solely for purposes and applications like this.
+
 
 **Disclaimer**: The default sample JSON is filled with fictional data only , except those: `paymentAccount` and `bankCode` - they are not the mock data and refer to *my* real account open solely for purposes and applications like this.
 
