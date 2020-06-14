@@ -1,8 +1,8 @@
 {
-  "name": "qr-spayd-invoice",
+  "name": "spayd-invoice",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nikolas-charalambidis.github.io/qr-spayd-invoice",
+  "homepage": "https://nikolas-charalambidis.github.io/spayd-invoice",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
