@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/spayd-invoice/precache-manifest.cf3bc1ebb1e70b356c0aec5c7f9e82c1.js"
+  "/spayd-invoice/precache-manifest.decdb6204abd29e03b9d66151d7317f0.js"
 );
 
 self.addEventListener('message', (event) => {
