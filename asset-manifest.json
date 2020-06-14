@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/spayd-invoice/static/css/main.df24737b.chunk.css",
-    "main.js": "/spayd-invoice/static/js/main.fad75ccf.chunk.js",
-    "main.js.map": "/spayd-invoice/static/js/main.fad75ccf.chunk.js.map",
+    "main.js": "/spayd-invoice/static/js/main.3738cdf4.chunk.js",
+    "main.js.map": "/spayd-invoice/static/js/main.3738cdf4.chunk.js.map",
     "runtime-main.js": "/spayd-invoice/static/js/runtime-main.942d7abe.js",
     "runtime-main.js.map": "/spayd-invoice/static/js/runtime-main.942d7abe.js.map",
     "static/js/2.bda70377.chunk.js": "/spayd-invoice/static/js/2.bda70377.chunk.js",
     "static/js/2.bda70377.chunk.js.map": "/spayd-invoice/static/js/2.bda70377.chunk.js.map",
     "index.html": "/spayd-invoice/index.html",
-    "precache-manifest.643d125a110c5bc6d7c86e628f88098a.js": "/spayd-invoice/precache-manifest.643d125a110c5bc6d7c86e628f88098a.js",
+    "precache-manifest.cf3bc1ebb1e70b356c0aec5c7f9e82c1.js": "/spayd-invoice/precache-manifest.cf3bc1ebb1e70b356c0aec5c7f9e82c1.js",
     "service-worker.js": "/spayd-invoice/service-worker.js",
     "static/css/main.df24737b.chunk.css.map": "/spayd-invoice/static/css/main.df24737b.chunk.css.map",
     "static/js/2.bda70377.chunk.js.LICENSE.txt": "/spayd-invoice/static/js/2.bda70377.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.942d7abe.js",
     "static/js/2.bda70377.chunk.js",
     "static/css/main.df24737b.chunk.css",
-    "static/js/main.fad75ccf.chunk.js"
+    "static/js/main.3738cdf4.chunk.js"
   ]
 }
