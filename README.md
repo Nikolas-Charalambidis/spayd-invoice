@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Nikolas-Charalambidis/qr-spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/qr-spayd-invoice)
+[![Build Status](https://travis-ci.org/Nikolas-Charalambidis/qr-spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice)
 
 ## Available Scripts
 
