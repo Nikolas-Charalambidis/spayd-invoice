@@ -13,10 +13,6 @@ class Invoice extends React.Component {
 		}
 	}
 
-	//<input type="file" name="file" onChange={this.onChangeHandler}/>
-	//<QR data={this.state.data}/>
-	//<GenerateButton data={this.state.data}/>
-
 	render() {
 		return <div>
 			<Generator data={this.state.data} />
@@ -31,8 +27,6 @@ class Invoice extends React.Component {
 		const scope = this;
 		const reader = new FileReader();
 		reader.onload = function(e) {
-			console.log("File: ", reader.result);
-			console.log("newData: ", JSON.parse(reader.result.toString()));
 			scope.setState({
 				data: scope.recalculateData(JSON.parse(reader.result.toString()))
 			});
@@ -63,7 +57,6 @@ class Invoice extends React.Component {
 			data.summary.priceTotalSum += totalPrice;
 			data.summary.priceTotalWithVatSum += totalPriceWithVat;
 		}
-		console.log("recalculateData: ", data);
 		return data;
 	};
 }

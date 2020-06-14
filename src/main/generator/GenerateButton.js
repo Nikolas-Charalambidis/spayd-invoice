@@ -6,7 +6,6 @@ import dateFormat from "dateformat";
 class GenerateButton extends React.Component {
 
 	render() {
-		console.log("GenerateButton: ", this.props.data.sender.label);
 		return <div>
 			<button onClick={this.generate}>Generate invoice</button>
 		</div>
@@ -30,7 +29,6 @@ class GenerateButton extends React.Component {
 		const rowSize = 16;
 		const subjectsBase = rowGap + 64;
 
-		console.log("today: ", new Date());
 		var dateOfIssue = data.paymentTerms.dateOfIssue ? new Date(data.paymentTerms.dateOfIssue) : new Date();
 		var dueDate = new Date(dateOfIssue);
 		dueDate.setDate(dueDate.getDate() + parseInt(data.paymentTerms.paymentPeriodInDays));
@@ -171,8 +169,6 @@ class GenerateButton extends React.Component {
 		doc.text(LEFT + TAB, UP + summaryBase + rowSize * 2, data.noteLine);
 
 		doc.save(invoiceLabel + '.pdf');
-
-		console.log('The link was clicked.');
 	}
 }
 

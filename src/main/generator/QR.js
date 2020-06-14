@@ -12,16 +12,15 @@ class QR extends React.Component {
 
 	componentDidUpdate(previousProps, previousState, snapshot) {
 		if (previousProps !== this.props) {
-			this.calculateQr();
+			this.qr();
 		}
 	}
 
 	componentDidMount() {
-		this.calculateQr();
+		this.qr();
 	}
 
 	render() {
-		console.log("QR1: ", this.props.data.sender.label);
 		return this.state.qr ?
 			<div>
 				<h1>QR code</h1>
@@ -32,7 +31,7 @@ class QR extends React.Component {
 			</div>;
 	}
 
-	calculateQr() {
+	qr() {
 		const accountNumber = this.props.data.paymentTerms.accountNumber;
 		const bankCode = this.props.data.paymentTerms.bankCode;
 		const getData = async () => {
@@ -54,13 +53,6 @@ class QR extends React.Component {
 		};
 		getData();
 	}
-
-	//qr = (data, iban) => {
-	//	const payment = data.summary.priceTotalWithVatSum;
-	//	const recipientName = "RECIPIENT NAME";
-	//	const message = "Test message";
-	//	return "SPD*1.0*ACC:" + iban + "*AM:" + payment + "*CC:CZK*MSG:" + message + "*RN:" + recipientName + "*";
-	//}
 }
 
 export default QR;
