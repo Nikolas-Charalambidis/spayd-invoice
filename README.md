@@ -1,5 +1,5 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b8979bf2e22f4170a7672bb079c73928)](https://app.codacy.com/manual/Nikolas-Charalambidis/spayd-invoice?utm_source=github.com&utm_medium=referral&utm_content=Nikolas-Charalambidis/spayd-invoice&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b8979bf2e22f4170a7672bb079c73928)](https://app.codacy.com/manual/Nikolas-Charalambidis/spayd-invoice?utm_source=github.com&utm_medium=referral&utm_content=Nikolas-Charalambidis/spayd-invoice&utm_campaign=Badge_Grade_Dashboard)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Nikolas-Charalambidis/react-hooks/blob/master/LICENSE)
 
 <img align="left" top="-50" src="https://nikolas-charalambidis.github.io/cdn/spayd-invoice/spayd-invoice-128.png" border="0">
