@@ -16,7 +16,7 @@ This web application is based on React and automatically built and deployed via 
 
 Here are a few basic scenarios you might want to go through.
 
-## How does it work?
+## How does it work
 
 First of all, the application is ready to generate an invoice since the default data are provided on the application start.
 
@@ -45,6 +45,6 @@ TO BE DONE
 As said, they indicate *how* some fields will be displayed in the invoice.
 
 #### `configuration.dateInId`
- - Type: `boolean`
- - Values: either `true` or `false` (omitted in that case)
- - Meaning: If the flag is set, the date in the `yyyymmdd` format will be included as a part of the ID of the invoice (ex. `20200614-15`). Otherwise, only true ID will be displayed (ex. `15`).
+- Type: `boolean`
+- Values: either `true` or `false` (omitted in that case)
+- Meaning: If the flag is set, the date in the `yyyymmdd` format will be included as a part of the ID of the invoice (ex. `20200614-15`). Otherwise, only true ID will be displayed (ex. `15`).
