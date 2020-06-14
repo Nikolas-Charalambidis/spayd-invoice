@@ -1,9 +1,11 @@
 [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Nikolas-Charalambidis/react-hooks/blob/master/LICENSE)
 
+<img align="left" top="50" src="https://nikolas-charalambidis.github.io/cdn/spayd-invoice/spayd-invoice-128.png" border="0">
+
 # SPAYD Invoice
 
-The application generates invoice in the Czech language based on the provided data in the JSON format. The invoice contains all the fields a decent invoice should have and a QR payment code which follows the [Short Payment Descriptor](https://en.wikipedia.org/wiki/Short_Payment_Descriptor) (also known as SPAYD or SPD. Not *that* [SPD](https://en.wikipedia.org/wiki/Freedom_and_Direct_Democracy) though - hands out! That's why I prefer *SPAYD* over *SPD*). 
+The application generates invoice in the Czech language based on the provided data in the JSON format. The invoice contains all the fields a decent invoice should have and a QR payment code which follows the [Short Payment Descriptor](https://en.wikipedia.org/wiki/Short_Payment_Descriptor) (also known as SPAYD or SPD. Not *that* [SPD](https://en.wikipedia.org/wiki/Freedom_and_Direct_Democracy) though - God forbid!). 
 
 ## [https://nikolas-charalambidis.github.io/spayd-invoice/](https://nikolas-charalambidis.github.io/spayd-invoice/)
 
