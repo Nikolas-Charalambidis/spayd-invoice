@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice.svg?branch=master)](https://travis-ci.org/Nikolas-Charalambidis/spayd-invoice)
 [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/Nikolas-Charalambidis/react-hooks/blob/master/LICENSE)
 
-<img align="left" top="50" src="https://nikolas-charalambidis.github.io/cdn/spayd-invoice/spayd-invoice-128.png" border="0">
+<img align="left" top="-50" src="https://nikolas-charalambidis.github.io/cdn/spayd-invoice/spayd-invoice-128.png" border="0">
 
 # SPAYD Invoice
 
