@@ -6,7 +6,10 @@ import dateFormat from "dateformat";
 class GenerateButton extends React.Component {
 
 	render() {
-		return <button onClick={this.generate}>Generate</button>
+		console.log("GenerateButton: ", this.props.data.sender.label);
+		return <div>
+			<button onClick={this.generate}>Generate invoice</button>
+		</div>
 	}
 
 	generate = event => {

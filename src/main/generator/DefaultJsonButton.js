@@ -6,7 +6,9 @@ class DefaultJsonButton extends React.Component {
 	render() {
 		const json = JSON.stringify(jsonDefaultData, null, "\t");
 		const link = "data:'text/json;charset=utf-8," + encodeURIComponent(json) + "'";
-		return <a href={link} download="data.txt">Download JSON</a>
+		return <div>
+			<a className="downloadButton" href={link} download="data.json">Download default JSON</a>
+		</div>
 	}
 }
 
