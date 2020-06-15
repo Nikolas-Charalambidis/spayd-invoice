@@ -45,6 +45,12 @@
 	],
 	"noteLine": "Dodané služby a zboží zůstává až do úplného uhrazení majetkem dodavatele.",
 	"configuration": {
-		"dateInId": true
+		"documentName": "document",
+		"label": {
+			"dateInId": true
+		},
+		"includeVat": true,
+		"showSummary": true,
+		"separator": "hyphen"
 	}
 }

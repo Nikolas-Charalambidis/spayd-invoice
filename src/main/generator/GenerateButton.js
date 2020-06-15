@@ -14,161 +14,187 @@ class GenerateButton extends React.Component {
 	generate = (event) => {
 		event.preventDefault();
 
+		const doc = new JSPDF('p', 'pt');
 		const data = this.props.data;
 		const qrCodeCanvas = document.querySelectorAll("[data-qr=qr-name]")[0];
 		const qrCodeDataUri = qrCodeCanvas.toDataURL("image/png");
 
-		var doc = new JSPDF('p', 'pt');
-
 		const LEFT = 60;
 		const RIGHT = LEFT + 290;
-		const UP = 50;
+		const TOP = 50;
 		const TAB = 16;
+		const LEFT_TAB = LEFT + TAB;
 
 		const rowGap = 20;
 		const rowSize = 16;
-		const subjectsBase = rowGap + 64;
+		const rightOffset = 66;
 
 		var dateOfIssue = data.paymentTerms.dateOfIssue ? new Date(data.paymentTerms.dateOfIssue) : new Date();
+
+		doc.addFileToVFS('consolas-normal.ttf', consolas.normal);
+		doc.addFileToVFS('consolas-bold.ttf', consolas.bold);
+		doc.addFont('consolas-normal.ttf', "Consolas", "normal");
+		doc.addFont('consolas-bold.ttf', "Consolas", "bold");
+		doc.setFont('Consolas');
+
+		const invoiceNumber = data.configuration.label.dateInId ? dateFormat(dateOfIssue, "yyyymmdd-") : "";
+		const invoiceLabel = "Faktura č. " + invoiceNumber + data.id;
+		doc.setFontSize(24);
+		doc.setFontType('bold');
+		doc.text(LEFT, TOP + rowGap + 24, invoiceLabel);
+
+		const subjectsBase = TOP + rowGap + 64;
+		doc.setFontType('bold');
+		doc.setFontSize(16);
+		doc.text(LEFT, subjectsBase, "Dodavatel:");
+		doc.setFontSize(10);
+		doc.text(LEFT_TAB, subjectsBase + rowSize, data.sender.label);
+		doc.setFontType('normal');
+		doc.text(LEFT_TAB, subjectsBase + 2 * rowSize, data.sender.addressLine1);
+		doc.text(LEFT_TAB, subjectsBase + 3 * rowSize, data.sender.addressLine2);
+		doc.setFontType('bold');
+		doc.text(LEFT_TAB, subjectsBase + 4 * rowSize, data.sender.identifierPrefix + ": " + data.sender.identifier);
+		doc.text(LEFT_TAB, subjectsBase + 5 * rowSize, data.sender.vatIdentifierPrefix + ": " + data.sender.varIdentifier);
+		doc.setFontType('normal');
+		doc.text(LEFT_TAB, subjectsBase + 6 * rowSize, data.sender.noteLine1);
+		doc.text(LEFT_TAB, subjectsBase + 7 * rowSize, data.sender.noteLine2);
+
+		doc.setFontType('bold');
+		doc.setFontSize(16);
+		doc.text(RIGHT, subjectsBase, "Odběratel:");
+		doc.setFontSize(10);
+		doc.text(RIGHT + TAB, subjectsBase + rowSize, data.billTo.label);
+		doc.setFontType('normal');
+		doc.text(RIGHT + TAB, subjectsBase + 2 * rowSize, data.billTo.addressLine1);
+		doc.text(RIGHT + TAB, subjectsBase + 3 * rowSize, data.billTo.addressLine2);
+		doc.setFontType('bold');
+		doc.text(RIGHT + TAB, subjectsBase + 4 * rowSize, data.billTo.identifierPrefix + ": " + data.billTo.identifier);
+		doc.text(RIGHT + TAB, subjectsBase + 5 * rowSize, data.billTo.vatIdentifierPrefix + ": " + data.billTo.varIdentifier);
+
 		var dueDate = new Date(dateOfIssue);
 		dueDate.setDate(dueDate.getDate() + parseInt(data.paymentTerms.paymentPeriodInDays));
 
-		doc.addFileToVFS('consolas-normal.ttf', consolas.normal);
-
-		doc.addFileToVFS('consolas-bold.ttf', consolas.bold);
-		doc.addFont('consolas-normal.ttf', "Consolas", "normal");
-
-		doc.addFont('consolas-bold.ttf', "Consolas", "bold");
-
-		doc.setFont('Consolas');
-		doc.setFontSize(24);
-		doc.setFontType('bold');
-
-		const invoiceNumberBase = data.configuration.dateInId ? dateFormat(dateOfIssue, "yyyymmdd-") : "";
-		const invoiceLabel = "Faktura č. " + invoiceNumberBase + data.id;
-		doc.text(LEFT, UP + rowGap + 24, invoiceLabel);
-
-		doc.setFontType('bold');
-		doc.setFontSize(16);
-		doc.text(LEFT, UP + subjectsBase, "Dodavatel:");
-		doc.setFontSize(10);
-		doc.text(LEFT + TAB, UP + subjectsBase + 1 * rowSize, data.sender.label);
-		doc.setFontType('normal');
-		doc.text(LEFT + TAB, UP + subjectsBase + 2 * rowSize, data.sender.addressLine1);
-		doc.text(LEFT + TAB, UP + subjectsBase + 3 * rowSize, data.sender.addressLine2);
-		doc.setFontType('bold');
-		doc.text(LEFT + TAB, UP + subjectsBase + 4 * rowSize, data.sender.identifierPrefix + ": " + data.sender.identifier);
-		doc.setFontType('normal');
-		doc.text(LEFT + TAB, UP + subjectsBase + 6 * rowSize, data.sender.noteLine1);
-		doc.text(LEFT + TAB, UP + subjectsBase + 7 * rowSize, data.sender.noteLine2);
-
-		doc.setFontType('bold');
-		doc.setFontSize(16);
-		doc.text(RIGHT, UP + subjectsBase, "Odběratel:");
-		doc.setFontSize(10);
-		doc.text(RIGHT + TAB, UP + subjectsBase + 1 * rowSize, data.billTo.label);
-		doc.setFontType('normal');
-		doc.text(RIGHT + TAB, UP + subjectsBase + 2 * rowSize, data.billTo.addressLine1);
-		doc.text(RIGHT + TAB, UP + subjectsBase + 3 * rowSize, data.billTo.addressLine2);
-		doc.setFontType('bold');
-		doc.text(RIGHT + TAB, UP + subjectsBase + 4 * rowSize, data.billTo.identifierPrefix + ": " + data.billTo.identifier);
-		doc.text(RIGHT + TAB, UP + subjectsBase + 5 * rowSize, data.billTo.vatIdentifierPrefix + ": " + data.billTo.varIdentifier);
-
-		const paymentBase = UP + subjectsBase + 7 * rowSize;
+		const paymentBase = TOP + subjectsBase + 7 * rowSize;
 		const rightColumn = 116;
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + paymentBase, "Platební podmínky:");
+		doc.text(LEFT, paymentBase, "Platební podmínky:");
 		doc.setFontType('normal');
 		doc.setFontSize(10);
-		doc.text(LEFT + TAB, UP + paymentBase + 1 * rowSize, "Číslo účtu");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 1 * rowSize, data.paymentTerms.accountNumber + "/" + data.paymentTerms.bankCode);
-		doc.text(LEFT + TAB, UP + paymentBase + 2 * rowSize, "Banka");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 2 * rowSize, data.paymentTerms.bankName);
-		doc.text(LEFT + TAB, UP + paymentBase + 3 * rowSize, "Variabilní symbol");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 3 * rowSize, data.paymentTerms.variableSymbol);
-		doc.text(LEFT + TAB, UP + paymentBase + 4 * rowSize, "Způsob úhrady");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 4 * rowSize, data.paymentTerms.paymentType);
-		doc.text(LEFT + TAB, UP + paymentBase + 5 * rowSize, "Datum vystavení");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 5 * rowSize, dateFormat(dateOfIssue, "dd.mm.yyyy"));
-		doc.text(LEFT + TAB, UP + paymentBase + 6 * rowSize, "Datum splatnosti");
-		doc.text(LEFT + TAB + rightColumn, UP + paymentBase + 6 * rowSize,  dateFormat(dueDate, "dd.mm.yyyy"));
+
+		const infoData = [
+			{ label: "Číslo účtu", value: data.paymentTerms.accountNumber + "/" + data.paymentTerms.bankCode},
+			{ label: "Banka", value: data.paymentTerms.bankName },
+			{ label: "Variabilní symbol", value: data.paymentTerms.variableSymbol },
+			{ label: "Způsob úhrady", value: data.paymentTerms.paymentType },
+			{ label: "Datum vystavení", value: dateFormat(dateOfIssue, "dd.mm.yyyy") },
+			{ label: "Datum splatnosti", value: dateFormat(dueDate, "dd.mm.yyyy") }
+		];
+		for (let i=0; i<infoData.length; i++) {
+			doc.text(LEFT_TAB, paymentBase + (i + 1) * rowSize, infoData[i].label);
+			doc.text(LEFT_TAB + rightColumn, paymentBase + (i + 1) * rowSize, infoData[i].value);
+		}
 
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(RIGHT, UP + paymentBase, "QR platba:");
-		doc.addImage(qrCodeDataUri, "PNG", RIGHT, UP + paymentBase + 8, 175, 175);
+		doc.text(RIGHT, paymentBase, "QR platba:");
+		doc.addImage(qrCodeDataUri, "PNG", RIGHT, paymentBase + 8, 175, 175);
 
-		const invoiceBase = UP + paymentBase + 10 * rowSize;
+		const vatValuesArePresent = data.items.filter(item => Number(item.vatPercentage) !== 0).length > 0;
+
+		let hasVat = false;
+		const itemsData = [
+			{ x: 0,   label: "Název položky" },
+			{ x: 116, label: "Množsví" },
+			{ x: 165, label: "Cena" }
+		];
+		if (data.configuration.includeVat || vatValuesArePresent) {
+			itemsData.push(
+				{ x: 245, label: "DPH %" },
+				{ x: 290, label: "Cena s DPH" },
+				{ x: 384, label: "Celkem s DPH" }
+			);
+			hasVat = true;
+		} else {
+			itemsData.push({ x: 416, label: "Celkem" });
+		}
+
+		const invoiceBase = TOP + paymentBase + 10 * rowSize;
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + invoiceBase, "Fakturace za dodané služby:");
+		doc.text(LEFT, invoiceBase, "Fakturace za dodané služby:");
+
 		doc.setFontSize(10);
-
-		const columnPosition = [0, 116, 165, 245, 290, 384];
-
-		doc.text(LEFT + TAB + columnPosition[0], UP + invoiceBase + rowSize, "Název položky");
-		doc.text(LEFT + TAB + columnPosition[1], UP + invoiceBase + rowSize, "Množsví");
-		doc.text(LEFT + TAB + columnPosition[2], UP + invoiceBase + rowSize, "Cena");
-		doc.text(LEFT + TAB + columnPosition[3], UP + invoiceBase + rowSize, "DPH %");
-		doc.text(LEFT + TAB + columnPosition[4], UP + invoiceBase + rowSize, "Cena s DPH");
-		doc.text(LEFT + TAB + columnPosition[5], UP + invoiceBase + rowSize, "Celkem s DPH");
+		for (let i=0; i<itemsData.length; i++) {
+			console.log("#" + i + ": ", LEFT_TAB + itemsData[i].x + "     " +invoiceBase + rowSize, itemsData[i].label);
+			doc.text(LEFT_TAB + itemsData[i].x, invoiceBase + rowSize, itemsData[i].label);
+		}
 
 		doc.setFontType('normal');
-
-		//var priceTotalSum = 0;
-		//var priceTotalWithVatSum = 0;
-
 		const items = data.items;
-		for (var i=0; i<items.length; i++) {
-			//const vatCoef = 1 + data.items[i].vatPercentage / 100;
-			//const amount = data.items[i].amount;
-
-			//const currentPrice = data.items[i].pricePerUnit;
-			//const currentPriceWithVat = currentPrice * vatCoef;
-			//const currentTotalPrice = currentPrice * amount;
-			//const currentTotalPriceWithVat = currentPriceWithVat * amount;
-
-			//priceTotalSum += currentTotalPrice;
-			//priceTotalWithVatSum += currentTotalPriceWithVat;
+		for (let i=0; i<items.length; i++) {
 
 			const price = parseFloat(String(data.items[i].price)).toLocaleString('cs') + " Kč";
 			const priceWithVat  = parseFloat(String(data.items[i].priceWithVat)).toLocaleString('cs') + " Kč";
 			const totalPriceWithVat  = parseFloat(String(data.items[i].totalPriceWithVat)).toLocaleString('cs') + " Kč";
-			//const price = parseFloat(String(currentPrice)).toLocaleString('cs') + " Kč";
-			//const priceWithVat  = parseFloat(String(currentPrice * vatCoef)).toLocaleString('cs') + " Kč";
-			//const priceTotalWithVat  = parseFloat(String(currentPrice * vatCoef  * data.items[i].amount)).toLocaleString('cs') + " Kč";
 
-			doc.text(LEFT + TAB + columnPosition[0], UP + invoiceBase + rowSize * (i + 2), items[i].label);
-			doc.text(LEFT + TAB + columnPosition[1], UP + invoiceBase + rowSize * (i + 2), items[i].amount);
-			doc.text(LEFT + TAB + columnPosition[2], UP + invoiceBase + rowSize * (i + 2), price);
-			doc.text(LEFT + TAB + columnPosition[3], UP + invoiceBase + rowSize * (i + 2), items[i].vatPercentage);
-			doc.text(LEFT + TAB + columnPosition[4], UP + invoiceBase + rowSize * (i + 2), priceWithVat);
-			doc.text(LEFT + TAB + columnPosition[5] + 66, UP + invoiceBase + rowSize * (i + 2), totalPriceWithVat, {align: "right"});
+			const y = invoiceBase + rowSize * (i + 2);
+			doc.text(LEFT_TAB + itemsData[0].x, y, items[i].label);
+			doc.text(LEFT_TAB + itemsData[1].x, y, items[i].amount);
+			doc.text(LEFT_TAB + itemsData[2].x, y, price);
+			if (!hasVat) {
+				doc.text(LEFT_TAB + itemsData[3].x + rightOffset - 32, y, totalPriceWithVat, {align: "right"});
+			} else {
+				doc.text(LEFT_TAB + itemsData[3].x, y, items[i].vatPercentage);
+				doc.text(LEFT_TAB + itemsData[4].x, y, priceWithVat);
+				doc.text(LEFT_TAB + itemsData[5].x + rightOffset, y, totalPriceWithVat, {align: "right"});
+			}
 		}
 
-		//var formattedPriceTotalSum = parseFloat(String(priceTotalSum)).toLocaleString('cs') + " Kč";
-		//var formattedPriceTotalWithVatSum = parseFloat(String(priceTotalWithVatSum)).toLocaleString('cs') + " Kč";
 		var formattedPriceTotalSum = parseFloat(String(data.summary.priceTotalSum)).toLocaleString('cs') + " Kč";
 		var formattedPriceTotalWithVatSum = parseFloat(String(data.summary.priceTotalWithVatSum)).toLocaleString('cs') + " Kč";
 
-		doc.text(LEFT + TAB , UP + invoiceBase + rowSize * (items.length + 2), "----------------------------------------------------------------------------------");
-		doc.text(LEFT + TAB + columnPosition[4], UP + invoiceBase + rowSize * (items.length + 3), "Celkem bez DPH");
-		doc.text(LEFT + TAB + columnPosition[4], UP + invoiceBase + rowSize * (items.length + 4), "Celkem s DPH");
-		doc.text(LEFT + TAB + columnPosition[5] + 66, UP + invoiceBase + rowSize * (items.length + 3), formattedPriceTotalSum, {align: "right"});
-		doc.text(LEFT + TAB + columnPosition[5] + 66, UP + invoiceBase + rowSize * (items.length + 4), formattedPriceTotalWithVatSum, {align: "right"});
+		var separator;
+		switch (data.configuration.separator) {
+			case "dash": separator = "—"; break;
+			case "underscore": separator = "_"; break;
+			case "dot": separator = "."; break;
+			case "hyphen": separator = "-"; break;
+			default: separator = null;
+		}
 
-		const summaryBase = UP + invoiceBase + rowSize * (items.length + 3);
+		let summaryOffset = 0;
+
+		if (separator != null) {
+			doc.text(LEFT_TAB , invoiceBase + rowSize * (items.length + 2), separator.repeat(82));
+			summaryOffset++;
+		}
+
+		if (data.configuration.showSummary) {
+			if (hasVat) {
+				const yCoeficient = (items.length + 2 + summaryOffset);
+				doc.text(LEFT_TAB + 290, invoiceBase + rowSize * yCoeficient, "Celkem bez DPH");
+				doc.text(LEFT_TAB + 384 + rightOffset, invoiceBase + rowSize * yCoeficient, formattedPriceTotalSum, {align: "right"});
+				summaryOffset++;
+			}
+			const yCoeficient = (items.length + 2 + summaryOffset);
+			doc.text(LEFT_TAB + 290, invoiceBase + rowSize * yCoeficient, "Celkem");
+			doc.text(LEFT_TAB + 384 + rightOffset, invoiceBase + rowSize * yCoeficient, formattedPriceTotalWithVatSum, {align: "right"});
+		}
+
+		summaryOffset++;
+		const summaryBase = TOP + invoiceBase + rowSize * (items.length + summaryOffset);
 		doc.setFontType('bold');
 		doc.setFontSize(16);
-		doc.text(LEFT, UP + summaryBase, "Celkem k úhradě:");
-		doc.text(LEFT + TAB + columnPosition[5] + 66, UP + summaryBase, formattedPriceTotalWithVatSum, {align: "right"});
+		doc.text(LEFT, summaryBase, "Celkem k úhradě:");
+		doc.text(LEFT_TAB + 384 + rightOffset, summaryBase, formattedPriceTotalWithVatSum, {align: "right"});
 
 		doc.setFontType('normal');
 		doc.setFontSize(10);
-		doc.text(LEFT + TAB, UP + summaryBase + rowSize * 2, data.noteLine);
+		doc.text(LEFT_TAB, summaryBase + rowSize * 2, data.noteLine);
 
-		doc.save(invoiceLabel + '.pdf');
+		const documentName = data.configuration.documentName ? data.configuration.documentName : invoiceLabel;
+		doc.save(documentName + '.pdf');
 	}
 }
 
