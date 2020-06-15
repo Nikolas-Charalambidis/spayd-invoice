@@ -3,18 +3,27 @@ import jsonData from "../data/defaultData";
 import ReactFileReader from 'react-file-reader';
 import Generator from "./Generator";
 import DefaultJsonButton from "./generator/DefaultJsonButton";
+import dateFormat from "dateformat";
 
 class Invoice extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: this.recalculateData(jsonData)
+			data: this.recalculateData(jsonData),
+			fileName: "Default JSON",
+			uploadDate: null
 		};
 	}
 
 	render() {
 		return <div>
+			{this.state.uploadDate == null ?
+				<h1>{this.state.fileName}</h1> :
+				<div>
+					<h1>{this.state.fileName}</h1>
+					<h3>{dateFormat(this.state.uploadDate.toLocaleString(), "dd.mm.yyyy HH:MM:ss")}</h3>
+				</div>}
 			<Generator data={this.state.data} />
 			<DefaultJsonButton/>
 			<ReactFileReader handleFiles={this.handleFiles} fileTypes={'.json'}>
@@ -31,7 +40,12 @@ class Invoice extends React.Component {
 				data: scope.recalculateData(JSON.parse(reader.result.toString()))
 			});
 		};
+		scope.setState({
+			fileName: files[0].name,
+			uploadDate: new Date()
+		});
 		reader.readAsText(files[0]);
+
 	};
 
 	recalculateData = (data) => {
