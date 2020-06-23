@@ -2,15 +2,16 @@ import React from 'react';
 import jsonData from "../data/defaultData";
 import ReactFileReader from 'react-file-reader';
 import Generator from "./Generator";
-import DefaultJsonButton from "./generator/DefaultJsonButton";
+import DownloadJsonButton from "./generator/DownloadJsonButton";
 import dateFormat from "dateformat";
+import * as Json from "./function/Json";
 
 class Invoice extends React.Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: this.recalculateData(jsonData),
+			data: this.recalculateData(Json.clone(jsonData)),
 			fileName: "Default JSON",
 			uploadDate: null
 		};
@@ -25,7 +26,8 @@ class Invoice extends React.Component {
 					<h3>{dateFormat(this.state.uploadDate.toLocaleString(), "dd.mm.yyyy HH:MM:ss")}</h3>
 				</div>}
 			<Generator data={this.state.data} />
-			<DefaultJsonButton/>
+			<DownloadJsonButton data={Json.clone(jsonData)}>Download Default Json</DownloadJsonButton>
+			<DownloadJsonButton data={this.cleanData(this.state.data)}>Download Current Json</DownloadJsonButton>
 			<ReactFileReader handleFiles={this.handleFiles} fileTypes={'.json'}>
 				<button className='btn'>Upload</button>
 			</ReactFileReader>
@@ -45,7 +47,20 @@ class Invoice extends React.Component {
 			uploadDate: new Date()
 		});
 		reader.readAsText(files[0]);
+		console.log("DATA", scope.state.data)
+	};
 
+	cleanData = (input) => {
+		const data = Json.clone(input);
+		delete data.summary;
+
+		const items = data.items;
+		for (let i = 0; i < items.length; i++) {
+			delete data.items[i].priceWithVat;
+			delete data.items[i].totalPrice;
+			delete data.items[i].totalPriceWithVat;
+		}
+		return data;
 	};
 
 	recalculateData = (data) => {
@@ -54,7 +69,7 @@ class Invoice extends React.Component {
 		data.summary.priceTotalSum = 0;
 		data.summary.priceTotalWithVatSum = 0;
 
-		for (var i = 0; i < items.length; i++) {
+		for (let i = 0; i < items.length; i++) {
 			const vatCoeficient = 1 + data.items[i].vatPercentage / 100;
 			const price = data.items[i].price;
 			const amount = data.items[i].amount;

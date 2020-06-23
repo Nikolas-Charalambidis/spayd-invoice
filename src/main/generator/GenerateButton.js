@@ -29,7 +29,7 @@ class GenerateButton extends React.Component {
 		const rowSize = 16;
 		const rightOffset = 66;
 
-		var dateOfIssue = data.paymentTerms.dateOfIssue ? new Date(data.paymentTerms.dateOfIssue) : new Date();
+		let dateOfIssue = data.paymentTerms.dateOfIssue ? new Date(data.paymentTerms.dateOfIssue) : new Date();
 
 		doc.addFileToVFS('consolas-normal.ttf', consolas.normal);
 		doc.addFileToVFS('consolas-bold.ttf', consolas.bold);
@@ -43,38 +43,38 @@ class GenerateButton extends React.Component {
 		doc.setFontType('bold');
 		doc.text(LEFT, TOP + rowGap + 24, invoiceLabel);
 
+		console.log("HERE");
+
+		const subjectsData = [
+			{ fontType: 'normal', value: (source) => source.label },
+			{ fontType: 'normal', value: (source) => source.addressLine1 },
+			{ fontType: 'normal', value: (source) => source.addressLine2 },
+			{ fontType: 'bold'  , value: (source) => source.identifierPrefix + ": " + source.identifier },
+			{ fontType: 'bold'  , value: (source) => (
+				!!source.vatIdentifierPrefix && !!source.varIdentifier ? source.vatIdentifierPrefix + ": " + source.varIdentifier : "") },
+			{ fontType: 'normal', value: (source) => "" },
+			{ fontType: 'normal', value: (source) => source.noteLine1 },
+			{ fontType: 'normal', value: (source) => source.noteLine2 }
+		];
+
 		const subjectsBase = TOP + rowGap + 64;
 		doc.setFontType('bold');
 		doc.setFontSize(16);
 		doc.text(LEFT, subjectsBase, "Dodavatel:");
-		doc.setFontSize(10);
-		doc.text(LEFT_TAB, subjectsBase + rowSize, data.sender.label);
-		doc.setFontType('normal');
-		doc.text(LEFT_TAB, subjectsBase + 2 * rowSize, data.sender.addressLine1);
-		doc.text(LEFT_TAB, subjectsBase + 3 * rowSize, data.sender.addressLine2);
-		doc.setFontType('bold');
-		doc.text(LEFT_TAB, subjectsBase + 4 * rowSize, data.sender.identifierPrefix + ": " + data.sender.identifier);
-		doc.text(LEFT_TAB, subjectsBase + 5 * rowSize, data.sender.vatIdentifierPrefix + ": " + data.sender.varIdentifier);
-		doc.setFontType('normal');
-		doc.text(LEFT_TAB, subjectsBase + 6 * rowSize, data.sender.noteLine1);
-		doc.text(LEFT_TAB, subjectsBase + 7 * rowSize, data.sender.noteLine2);
-
-		doc.setFontType('bold');
-		doc.setFontSize(16);
 		doc.text(RIGHT, subjectsBase, "Odběratel:");
 		doc.setFontSize(10);
-		doc.text(RIGHT + TAB, subjectsBase + rowSize, data.billTo.label);
-		doc.setFontType('normal');
-		doc.text(RIGHT + TAB, subjectsBase + 2 * rowSize, data.billTo.addressLine1);
-		doc.text(RIGHT + TAB, subjectsBase + 3 * rowSize, data.billTo.addressLine2);
-		doc.setFontType('bold');
-		doc.text(RIGHT + TAB, subjectsBase + 4 * rowSize, data.billTo.identifierPrefix + ": " + data.billTo.identifier);
-		doc.text(RIGHT + TAB, subjectsBase + 5 * rowSize, data.billTo.vatIdentifierPrefix + ": " + data.billTo.varIdentifier);
 
-		var dueDate = new Date(dateOfIssue);
+		for (let i=0; i<subjectsData.length; i++) {
+			const y = subjectsBase + (i + 1) * rowSize;
+			doc.setFontType(subjectsData[i].fontType);
+			doc.text(LEFT_TAB, y, subjectsData[i].value(data.sender));
+			doc.text(RIGHT + TAB, y, subjectsData[i].value(data.billTo));
+		}
+
+		let dueDate = new Date(dateOfIssue);
 		dueDate.setDate(dueDate.getDate() + parseInt(data.paymentTerms.paymentPeriodInDays));
 
-		const paymentBase = TOP + subjectsBase + 7 * rowSize;
+		const paymentBase = TOP + subjectsBase + subjectsData.length * rowSize;
 		const rightColumn = 116;
 		doc.setFontType('bold');
 		doc.setFontSize(16);
@@ -126,7 +126,6 @@ class GenerateButton extends React.Component {
 
 		doc.setFontSize(10);
 		for (let i=0; i<itemsData.length; i++) {
-			console.log("#" + i + ": ", LEFT_TAB + itemsData[i].x + "     " +invoiceBase + rowSize, itemsData[i].label);
 			doc.text(LEFT_TAB + itemsData[i].x, invoiceBase + rowSize, itemsData[i].label);
 		}
 
@@ -151,10 +150,10 @@ class GenerateButton extends React.Component {
 			}
 		}
 
-		var formattedPriceTotalSum = parseFloat(String(data.summary.priceTotalSum)).toLocaleString('cs') + " Kč";
-		var formattedPriceTotalWithVatSum = parseFloat(String(data.summary.priceTotalWithVatSum)).toLocaleString('cs') + " Kč";
+		let formattedPriceTotalSum = parseFloat(String(data.summary.priceTotalSum)).toLocaleString('cs') + " Kč";
+		let formattedPriceTotalWithVatSum = parseFloat(String(data.summary.priceTotalWithVatSum)).toLocaleString('cs') + " Kč";
 
-		var separator;
+		let separator;
 		switch (data.configuration.separator) {
 			case "dash": separator = "—"; break;
 			case "underscore": separator = "_"; break;
