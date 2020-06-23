@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b90860836c5e7598aab6b3db11c3cc60",
+    "revision": "9aa5557a91b7e95511b818c7953fdba1",
     "url": "/spayd-invoice/index.html"
   },
   {
-    "revision": "6f09990bc896bdb41035",
+    "revision": "bb46d28d54e68517bcca",
     "url": "/spayd-invoice/static/css/main.df24737b.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/spayd-invoice/static/js/2.ac737b3c.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6f09990bc896bdb41035",
-    "url": "/spayd-invoice/static/js/main.a56d7340.chunk.js"
+    "revision": "bb46d28d54e68517bcca",
+    "url": "/spayd-invoice/static/js/main.64e3b8d5.chunk.js"
   },
   {
     "revision": "980e3d46b5358636afc1",
