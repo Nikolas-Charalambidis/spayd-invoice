@@ -1,5 +1,4 @@
 {
-	"id": "00",
 	"sender": {
 		"label": "Mgr. Jack Daniels",
 		"addressLine1": "Whiskey Street 123a/50",
@@ -33,24 +32,24 @@
 		"constantSymbol": "",
 		"paymentType": "Převodem",
 		"paymentPeriodInDays": "15",
-		"currency": "CZK"
+		"currency": "CZK",
+		"dueDate": "{{today+15}}",
+		"dateOfTaxableSupply": "2021-02-26",
+		"dateOfIssue": "{{today}}"
 	},
 	"items": [
 		{
 			"label": "IT služby",
-			"amount": "18",
+			"amount": "18 h",
 			"price": "6500",
 			"vatPercentage": "21"
 		}
 	],
+	"label": "{{year}}-{{id}}",
 	"noteLine": "Dodané služby a zboží zůstává až do úplného uhrazení majetkem dodavatele.",
 	"configuration": {
 		"documentName": "document",
-		"label": {
-			"dateInId": true
-		},
-		"includeVat": true,
-		"showSummary": true,
-		"separator": "hyphen"
+		"id": "01",
+		"today": "2020-11-05"
 	}
 }

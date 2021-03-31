@@ -3,8 +3,10 @@ import JSPDF from "jspdf";
 import consolas from "./Consolas";
 import dateFormat from "dateformat";
 
-class GenerateButton extends React.Component {
+import hash from "object-hash";
 
+class GenerateButton extends React.Component {
+	
 	render() {
 		return <div>
 			<button onClick={this.generate}>Generate invoice</button>
@@ -14,22 +16,29 @@ class GenerateButton extends React.Component {
 	generate = (event) => {
 		event.preventDefault();
 
+		const fontSmall = 9;
+		const fontBig = 14;
+
 		const doc = new JSPDF('p', 'pt');
 		const data = this.props.data;
+
+		console.log("Checksum: ", hash(data));
+
 		const qrCodeCanvas = document.querySelectorAll("[data-qr=qr-name]")[0];
 		const qrCodeDataUri = qrCodeCanvas.toDataURL("image/png");
 
 		const LEFT = 60;
 		const RIGHT = LEFT + 290;
-		const TOP = 50;
+		const TOP = 40;
 		const TAB = 16;
 		const LEFT_TAB = LEFT + TAB;
+		const RIGHT_ALIGN_BASE = 450;
 
 		const rowGap = 20;
 		const rowSize = 16;
-		const rightOffset = 66;
 
 		let dateOfIssue = data.paymentTerms.dateOfIssue ? new Date(data.paymentTerms.dateOfIssue) : new Date();
+		let dateOfTaxableSupply = data.paymentTerms.dateOfTaxableSupply ? new Date(data.paymentTerms.dateOfTaxableSupply) : new Date();
 
 		doc.addFileToVFS('consolas-normal.ttf', consolas.normal);
 		doc.addFileToVFS('consolas-bold.ttf', consolas.bold);
@@ -37,165 +46,210 @@ class GenerateButton extends React.Component {
 		doc.addFont('consolas-bold.ttf', "Consolas", "bold");
 		doc.setFont('Consolas');
 
-		const invoiceNumber = data.configuration.label.dateInId ? dateFormat(dateOfIssue, "yyyymmdd-") : "";
-		const invoiceLabel = "Faktura č. " + invoiceNumber + data.id;
+		const invoiceLabel = "Faktura č. " + data.label;
 		doc.setFontSize(24);
 		doc.setFontType('bold');
 		doc.text(LEFT, TOP + rowGap + 24, invoiceLabel);
+		doc.setFontType('normal');
 
-		console.log("HERE");
+		if (data.summary.hasVat) {
+			doc.setFontSize(fontSmall);
+			doc.text(LEFT_TAB, TOP + rowGap + 40, "Daňový doklad");
+		}
 
 		const subjectsData = [
-			{ fontType: 'normal', value: (source) => source.label },
-			{ fontType: 'normal', value: (source) => source.addressLine1 },
-			{ fontType: 'normal', value: (source) => source.addressLine2 },
-			{ fontType: 'bold'  , value: (source) => source.identifierPrefix + ": " + source.identifier },
-			{ fontType: 'bold'  , value: (source) => (
-				!!source.vatIdentifierPrefix && !!source.varIdentifier ? source.vatIdentifierPrefix + ": " + source.varIdentifier : "") },
-			{ fontType: 'normal', value: (source) => "" },
-			{ fontType: 'normal', value: (source) => source.noteLine1 },
-			{ fontType: 'normal', value: (source) => source.noteLine2 }
-		];
+			{fontType: 'normal', value: (source) => source.label},
+			{fontType: 'normal', value: (source) => source.addressLine1},
+			{fontType: 'normal', value: (source) => source.addressLine2},
+			{fontType: 'bold', value: (source) => source.identifierPrefix + ": " + source.identifier}
+		]
 
-		const subjectsBase = TOP + rowGap + 64;
+		subjectsData.push({
+				fontType: 'bold', value: (source, checkVat) => (
+						checkVat === true ?
+							!!source.vatIdentifierPrefix && !!source.vatIdentifier && data.summary.hasVat ?
+								source.vatIdentifierPrefix + ": " + source.vatIdentifier
+							: ""
+						:
+							!!source.vatIdentifierPrefix && !!source.vatIdentifier ?
+								source.vatIdentifierPrefix + ": " + source.vatIdentifier
+							: ""
+				)});
+
+		subjectsData.push(
+			{fontType: 'normal', value: () => ""},
+			{fontType: 'normal', value: (source) => source.noteLine1},
+			{fontType: 'normal', value: (source) => source.noteLine2}
+		);
+
+		const subjectsBase = TOP + rowGap + 64 + 16;
 		doc.setFontType('bold');
-		doc.setFontSize(16);
+		doc.setFontSize(fontBig);
 		doc.text(LEFT, subjectsBase, "Dodavatel:");
 		doc.text(RIGHT, subjectsBase, "Odběratel:");
-		doc.setFontSize(10);
+		doc.setFontSize(fontSmall);
 
-		for (let i=0; i<subjectsData.length; i++) {
+		for (let i = 0; i < subjectsData.length; i++) {
 			const y = subjectsBase + (i + 1) * rowSize;
 			doc.setFontType(subjectsData[i].fontType);
-			doc.text(LEFT_TAB, y, subjectsData[i].value(data.sender));
-			doc.text(RIGHT + TAB, y, subjectsData[i].value(data.billTo));
+			doc.text(LEFT_TAB, y, subjectsData[i].value(data.sender, true));
+			doc.text(RIGHT + TAB, y, subjectsData[i].value(data.billTo, false));
 		}
 
-		let dueDate = new Date(dateOfIssue);
-		dueDate.setDate(dueDate.getDate() + parseInt(data.paymentTerms.paymentPeriodInDays));
+		let dueDate = new Date(data.paymentTerms.dueDate);
 
 		const paymentBase = TOP + subjectsBase + subjectsData.length * rowSize;
-		const rightColumn = 116;
 		doc.setFontType('bold');
-		doc.setFontSize(16);
+		doc.setFontSize(fontBig);
 		doc.text(LEFT, paymentBase, "Platební podmínky:");
 		doc.setFontType('normal');
-		doc.setFontSize(10);
+		doc.setFontSize(fontSmall);
 
 		const infoData = [
-			{ label: "Číslo účtu", value: data.paymentTerms.accountNumber + "/" + data.paymentTerms.bankCode},
-			{ label: "Banka", value: data.paymentTerms.bankName },
-			{ label: "Variabilní symbol", value: data.paymentTerms.variableSymbol },
-			{ label: "Způsob úhrady", value: data.paymentTerms.paymentType },
-			{ label: "Datum vystavení", value: dateFormat(dateOfIssue, "dd.mm.yyyy") },
-			{ label: "Datum splatnosti", value: dateFormat(dueDate, "dd.mm.yyyy") }
-		];
-		for (let i=0; i<infoData.length; i++) {
+			{fontType: 'normal', label: "Číslo účtu", value: data.paymentTerms.accountNumber + "/" + data.paymentTerms.bankCode},
+			{fontType: 'normal', label: "Banka", value: data.paymentTerms.bankName},
+			{fontType: 'normal', label: "Variabilní symbol", value: data.paymentTerms.variableSymbol},
+			{fontType: 'normal', label: "Způsob úhrady", value: data.paymentTerms.paymentType}
+		]
+		const infoDataDateOfIssue = {
+			fontType: 'normal', label: "Datum vystavení", value: dateFormat(dateOfIssue, "dd.mm.yyyy")
+		};
+
+		if (data.summary.hasVat) {
+			const infoDataDateOfTaxableSupply = {
+				fontType: 'normal',
+				label: "Datum uskutečnění zdanitelného plnění",
+				value: dateFormat(dateOfTaxableSupply, "dd.mm.yyyy")
+			};
+			if (dateOfIssue > dateOfTaxableSupply) {
+				infoData.push(infoDataDateOfTaxableSupply, infoDataDateOfIssue);
+			} else {
+				infoData.push(infoDataDateOfIssue, infoDataDateOfTaxableSupply);
+			}
+		} else {
+			infoData.push(infoDataDateOfIssue);
+		}
+
+		infoData.push({fontType: 'bold', label: "Datum splatnosti", value: dateFormat(dueDate, "dd.mm.yyyy")});
+
+
+		const rightColumn = 250;
+		for (let i = 0; i < infoData.length; i++) {
+			doc.setFontType(infoData[i].fontType);
 			doc.text(LEFT_TAB, paymentBase + (i + 1) * rowSize, infoData[i].label);
-			doc.text(LEFT_TAB + rightColumn, paymentBase + (i + 1) * rowSize, infoData[i].value);
+			doc.text(LEFT_TAB + rightColumn, paymentBase + (i + 1) * rowSize, infoData[i].value, {align: "right"});
 		}
 
 		doc.setFontType('bold');
-		doc.setFontSize(16);
+		doc.setFontSize(fontBig);
 		doc.text(RIGHT, paymentBase, "QR platba:");
-		doc.addImage(qrCodeDataUri, "PNG", RIGHT, paymentBase + 8, 175, 175);
+		doc.addImage(qrCodeDataUri, "PNG", RIGHT + TAB, paymentBase + 8, 159, 159);
 
-		const vatValuesArePresent = data.items.filter(item => Number(item.vatPercentage) !== 0).length > 0;
-
-		let hasVat = false;
 		const itemsData = [
-			{ x: 0,   label: "Název položky" },
-			{ x: 116, label: "Množsví" },
-			{ x: 165, label: "Cena" }
+			{x: 0, label: "Název položky"},
+			{x: RIGHT_ALIGN_BASE - 325, label: "Množsví"},
+			{x: RIGHT_ALIGN_BASE - 255, label: "Cena za mj."}
 		];
-		if (data.configuration.includeVat || vatValuesArePresent) {
+
+		if (data.summary.hasVat) {
 			itemsData.push(
-				{ x: 245, label: "DPH %" },
-				{ x: 290, label: "Cena s DPH" },
-				{ x: 384, label: "Celkem s DPH" }
+				{x: RIGHT_ALIGN_BASE - 210, label: "% DPH"},
+				{x: RIGHT_ALIGN_BASE - 140, label: "Bez DPH"},
+				{x: RIGHT_ALIGN_BASE - 70, label: "DPH"}
 			);
-			hasVat = true;
-		} else {
-			itemsData.push({ x: 416, label: "Celkem" });
 		}
+		itemsData.push({x: RIGHT_ALIGN_BASE, label: "Celkem"});
+
 
 		const invoiceBase = TOP + paymentBase + 10 * rowSize;
 		doc.setFontType('bold');
-		doc.setFontSize(16);
+		doc.setFontSize(fontBig);
 		doc.text(LEFT, invoiceBase, "Fakturace za dodané služby:");
 
-		doc.setFontSize(10);
-		for (let i=0; i<itemsData.length; i++) {
-			doc.text(LEFT_TAB + itemsData[i].x, invoiceBase + rowSize, itemsData[i].label);
+		doc.setFontSize(fontSmall);
+		doc.text(LEFT_TAB + itemsData[0].x, invoiceBase + rowSize, itemsData[0].label);
+		for (let i = 1; i < itemsData.length; i++) {
+			doc.text(LEFT_TAB + itemsData[i].x, invoiceBase + rowSize, itemsData[i].label, {align: "right"});
 		}
 
 		doc.setFontType('normal');
-		const items = data.items;
-		for (let i=0; i<items.length; i++) {
+		for (let i = 0; i < data.items.length; i++) {
 
-			const price = parseFloat(String(data.items[i].price)).toLocaleString('cs') + " Kč";
-			const priceWithVat  = parseFloat(String(data.items[i].priceWithVat)).toLocaleString('cs') + " Kč";
-			const totalPriceWithVat  = parseFloat(String(data.items[i].totalPriceWithVat)).toLocaleString('cs') + " Kč";
+			const vat = this.asCurrency(data.items[i].vat);
+			const price = this.asCurrency(data.items[i].price);
+			const amount = this.asLabeledNumber(data.items[i].amount, data.items[i].amountLabel);
+			const vatPercentage = this.asPercentage(data.items[i].vatPercentage);
+			const totalPrice = this.asCurrency(data.items[i].totalPrice);
+			const totalPriceWithVat = this.asCurrency(data.items[i].totalPriceWithVat);
 
 			const y = invoiceBase + rowSize * (i + 2);
-			doc.text(LEFT_TAB + itemsData[0].x, y, items[i].label);
-			doc.text(LEFT_TAB + itemsData[1].x, y, items[i].amount);
-			doc.text(LEFT_TAB + itemsData[2].x, y, price);
-			if (!hasVat) {
-				doc.text(LEFT_TAB + itemsData[3].x + rightOffset - 32, y, totalPriceWithVat, {align: "right"});
+			doc.text(LEFT_TAB + itemsData[0].x, y, data.items[i].label);
+			doc.text(LEFT_TAB + itemsData[1].x, y, String(amount), {align: "right"});
+			doc.text(LEFT_TAB + itemsData[2].x, y, String(price), {align: "right"});
+			if (!data.summary.hasVat) {
+				doc.text(LEFT_TAB + itemsData[3].x, y, totalPriceWithVat, {align: "right"});
 			} else {
-				doc.text(LEFT_TAB + itemsData[3].x, y, items[i].vatPercentage);
-				doc.text(LEFT_TAB + itemsData[4].x, y, priceWithVat);
-				doc.text(LEFT_TAB + itemsData[5].x + rightOffset, y, totalPriceWithVat, {align: "right"});
+				doc.text(LEFT_TAB + itemsData[3].x, y, String(vatPercentage), {align: "right"});
+				doc.text(LEFT_TAB + itemsData[4].x, y, String(totalPrice), {align: "right"});
+				doc.text(LEFT_TAB + itemsData[5].x, y, String(vat), {align: "right"});
+				doc.text(LEFT_TAB + itemsData[6].x, y, totalPriceWithVat, {align: "right"});
 			}
 		}
 
-		let formattedPriceTotalSum = parseFloat(String(data.summary.priceTotalSum)).toLocaleString('cs') + " Kč";
-		let formattedPriceTotalWithVatSum = parseFloat(String(data.summary.priceTotalWithVatSum)).toLocaleString('cs') + " Kč";
+		/////
 
-		let separator;
-		switch (data.configuration.separator) {
-			case "dash": separator = "—"; break;
-			case "underscore": separator = "_"; break;
-			case "dot": separator = "."; break;
-			case "hyphen": separator = "-"; break;
-			default: separator = null;
-		}
+		const vatData = [
+			{x: RIGHT_ALIGN_BASE - 210, label: "Sazba"},
+			{x: RIGHT_ALIGN_BASE - 140, label: "Základ"},
+			{x: RIGHT_ALIGN_BASE - 70, label: "DPH"},
+			{x: RIGHT_ALIGN_BASE, label: "Včetně DPH"}
+		]
+
+		let formattedPriceTotalWithVatSum = this.asCurrency(data.summary.priceTotalWithVatSum);
 
 		let summaryOffset = 0;
+		const vatBase = TOP + invoiceBase + rowSize * (data.items.length);
+		if (data.summary.hasVat) {
 
-		if (separator != null) {
-			doc.text(LEFT_TAB , invoiceBase + rowSize * (items.length + 2), separator.repeat(82));
 			summaryOffset++;
-		}
 
-		if (data.configuration.showSummary) {
-			if (hasVat) {
-				const yCoeficient = (items.length + 2 + summaryOffset);
-				doc.text(LEFT_TAB + 290, invoiceBase + rowSize * yCoeficient, "Celkem bez DPH");
-				doc.text(LEFT_TAB + 384 + rightOffset, invoiceBase + rowSize * yCoeficient, formattedPriceTotalSum, {align: "right"});
+			doc.setFontType('bold');
+			for (let i = 0; i < vatData.length; i++) {
+				doc.text(LEFT_TAB + vatData[i].x, vatBase + rowSize * summaryOffset, vatData[i].label, {align: "right"});
+			}
+
+			summaryOffset++;
+
+			doc.setFontType('normal');
+			for (let [percentage, vatItem] of data.summary.vat) {
+				let i = 0;
+				doc.text(LEFT_TAB + vatData[i++].x, vatBase + rowSize * summaryOffset, this.asPercentage(percentage), {align: "right"});
+				doc.text(LEFT_TAB + vatData[i++].x, vatBase + rowSize * summaryOffset, this.asCurrency(vatItem.totalPrice), {align: "right"});
+				doc.text(LEFT_TAB + vatData[i++].x, vatBase + rowSize * summaryOffset, this.asCurrency(vatItem.totalVat), {align: "right"});
+				doc.text(LEFT_TAB + vatData[i++].x, vatBase + rowSize * summaryOffset, this.asCurrency(vatItem.totalPriceWithVat), {align: "right"});
 				summaryOffset++;
 			}
-			const yCoeficient = (items.length + 2 + summaryOffset);
-			doc.text(LEFT_TAB + 290, invoiceBase + rowSize * yCoeficient, "Celkem");
-			doc.text(LEFT_TAB + 384 + rightOffset, invoiceBase + rowSize * yCoeficient, formattedPriceTotalWithVatSum, {align: "right"});
 		}
 
-		summaryOffset++;
-		const summaryBase = TOP + invoiceBase + rowSize * (items.length + summaryOffset);
+		summaryOffset += 2;
+		const summaryBase = vatBase + rowSize * summaryOffset;
 		doc.setFontType('bold');
-		doc.setFontSize(16);
+		doc.setFontSize(fontBig);
 		doc.text(LEFT, summaryBase, "Celkem k úhradě:");
-		doc.text(LEFT_TAB + 384 + rightOffset, summaryBase, formattedPriceTotalWithVatSum, {align: "right"});
+		doc.text(LEFT_TAB + RIGHT_ALIGN_BASE, summaryBase, formattedPriceTotalWithVatSum, {align: "right"});
 
 		doc.setFontType('normal');
-		doc.setFontSize(10);
+		doc.setFontSize(fontSmall);
 		doc.text(LEFT_TAB, summaryBase + rowSize * 2, data.noteLine);
 
 		const documentName = data.configuration.documentName ? data.configuration.documentName : invoiceLabel;
 		doc.save(documentName + '.pdf');
 	}
-}
 
+	asNumber = (amount) => parseFloat(String(amount)).toLocaleString('cs');
+	asCurrency = (amount) => this.asLabeledNumber(amount, "Kč");
+	asPercentage = (amount) => this.asLabeledNumber(amount, "%");
+	asLabeledNumber = (amount, label) => label ? this.asNumber(amount) + " " + label : this.asNumber(amount);
+}
 
 export default GenerateButton;
