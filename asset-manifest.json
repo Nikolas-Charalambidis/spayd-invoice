@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/spayd-invoice/static/css/main.df24737b.chunk.css",
-    "main.js": "/spayd-invoice/static/js/main.64e3b8d5.chunk.js",
-    "main.js.map": "/spayd-invoice/static/js/main.64e3b8d5.chunk.js.map",
+    "main.js": "/spayd-invoice/static/js/main.01791d41.chunk.js",
+    "main.js.map": "/spayd-invoice/static/js/main.01791d41.chunk.js.map",
     "runtime-main.js": "/spayd-invoice/static/js/runtime-main.942d7abe.js",
     "runtime-main.js.map": "/spayd-invoice/static/js/runtime-main.942d7abe.js.map",
-    "static/js/2.ac737b3c.chunk.js": "/spayd-invoice/static/js/2.ac737b3c.chunk.js",
-    "static/js/2.ac737b3c.chunk.js.map": "/spayd-invoice/static/js/2.ac737b3c.chunk.js.map",
+    "static/js/2.e47d2c2a.chunk.js": "/spayd-invoice/static/js/2.e47d2c2a.chunk.js",
+    "static/js/2.e47d2c2a.chunk.js.map": "/spayd-invoice/static/js/2.e47d2c2a.chunk.js.map",
     "index.html": "/spayd-invoice/index.html",
-    "precache-manifest.c2d343450b61ea2f299ae9957db84eef.js": "/spayd-invoice/precache-manifest.c2d343450b61ea2f299ae9957db84eef.js",
+    "precache-manifest.581f7de5d8447eed4e21aa0ff32e581c.js": "/spayd-invoice/precache-manifest.581f7de5d8447eed4e21aa0ff32e581c.js",
     "service-worker.js": "/spayd-invoice/service-worker.js",
     "static/css/main.df24737b.chunk.css.map": "/spayd-invoice/static/css/main.df24737b.chunk.css.map",
-    "static/js/2.ac737b3c.chunk.js.LICENSE.txt": "/spayd-invoice/static/js/2.ac737b3c.chunk.js.LICENSE.txt"
+    "static/js/2.e47d2c2a.chunk.js.LICENSE.txt": "/spayd-invoice/static/js/2.e47d2c2a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.942d7abe.js",
-    "static/js/2.ac737b3c.chunk.js",
+    "static/js/2.e47d2c2a.chunk.js",
     "static/css/main.df24737b.chunk.css",
-    "static/js/main.64e3b8d5.chunk.js"
+    "static/js/main.01791d41.chunk.js"
   ]
 }
