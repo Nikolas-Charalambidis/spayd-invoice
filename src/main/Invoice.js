@@ -75,6 +75,18 @@ class Invoice extends React.Component {
 
 	recalculateData = (data) => {
 
+		data.configuration.constants = data.configuration.constants === undefined ? {} : data.configuration.constants;
+
+		const today = data.configuration.constants.today === undefined ? new Date() : new Date(data.configuration.constants.today);
+		data.configuration.constants.today = dateFormat(today, "yyyy-mm-dd");
+		data.configuration.constants.day = dateFormat(today, "dd");
+		data.configuration.constants.month = dateFormat(today, "mm");
+		data.configuration.constants.year = dateFormat(today, "yyyy");
+
+		data = this.modifiedJson(data, (value) => {
+			return this.templated(value, data.configuration.constants);
+		});
+
 		const items = data.items;
 		const summary = {};
 		summary.vatSum = 0;
@@ -131,22 +143,10 @@ class Invoice extends React.Component {
 
 		summary.vat = new Map([...summary.vat.entries()].sort());
 
-		const constants = data.configuration.constants === undefined ? {} : data.configuration.constants;
-		data.configuration.constants = constants;
-
-		const today = data.configuration.constants.today === undefined ? new Date() : new Date(data.configuration.constants.today);
-		data.configuration.constants.today = dateFormat(today, "yyyy-mm-dd");
-		data.configuration.constants.day = dateFormat(today, "dd");
-		data.configuration.constants.month = dateFormat(today, "mm");
-		data.configuration.constants.year = dateFormat(today, "yyyy");
-
-		const json = this.modifiedJson(data, (value) => {
-			return this.templated(value, data.configuration.constants);
-		});
-		json.summary = summary;
-		console.log("RECALCULATED", json);
-		console.log("Checksum: ", hash(json));
-		return json;
+		data.summary = summary;
+		console.log("RECALCULATED", data);
+		console.log("Checksum: ", hash(data));
+		return data;
 	};
 
 	modifiedJson = (json, replaced) => {
@@ -163,7 +163,7 @@ class Invoice extends React.Component {
 
 	templated = (expression, constants) => {
 		const templateMatcher = /{{\s*([^\s]+?)\s*}}/g;
-		const todayMatcher = /today([+\-]\d+)/g;
+		const todayMatcher = /today([+-]\d+)/g;
 		return expression.toString().replace(templateMatcher, (substring, value) => {
 			const todayGroups = this.getGroups(todayMatcher, substring);
 			if (todayGroups.length > 0) {
