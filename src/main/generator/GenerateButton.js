@@ -175,12 +175,21 @@ class GenerateButton extends React.Component {
 		doc.setFontType('normal');
 		for (let i = 0; i < data.items.length; i++) {
 
-			const vat = this.asCurrency(data.items[i].vat);
-			const price = this.asCurrency(data.items[i].price);
-			const amount = this.asLabeledNumber(data.items[i].amount, data.items[i].amountLabel);
-			const vatPercentage = this.asPercentage(data.items[i].vatPercentage);
-			const totalPrice = this.asCurrency(data.items[i].totalPrice);
-			const totalPriceWithVat = this.asCurrency(data.items[i].totalPriceWithVat);
+			let vat = this.asCurrency(data.items[i].vat);
+			let price = this.asCurrency(data.items[i].price);
+			let amount = this.asLabeledNumber(data.items[i].amount, data.items[i].amountLabel);
+			let vatPercentage = this.asPercentage(data.items[i].vatPercentage);
+			let totalPrice = this.asCurrency(data.items[i].totalPrice);
+			let totalPriceWithVat = this.asCurrency(data.items[i].totalPriceWithVat);
+
+			if (data.items[i].totalPriceWithVat === 0) {
+				vat = "";
+				price = "";
+				amount = "";
+				vatPercentage = "";
+				totalPrice = "";
+				totalPriceWithVat = "Zdarma";
+			}
 
 			const y = invoiceBase + rowSize * (i + 2);
 			doc.text(LEFT_TAB + itemsData[0].x, y, data.items[i].label);

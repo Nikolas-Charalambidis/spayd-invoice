@@ -24,7 +24,7 @@ class Invoice extends React.Component {
 				<h1>{this.state.fileName}</h1> :
 				<div>
 					<h1>{this.state.fileName}</h1>
-					<h3>{dateFormat(this.state.uploadDate.toLocaleString(), "dd.mm.yyyy HH:MM:ss")}</h3>
+					<h3>{this.state.uploadDate.toLocaleString()}</h3>
 				</div>}
 			<Generator data={this.state.data} />
 			<DownloadJsonButton data={Json.clone(jsonData)}>Download Default Json</DownloadJsonButton>
